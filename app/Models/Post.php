@@ -25,6 +25,6 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'pid');
+        return $this->hasMany(Comment::class, 'pid')->orderBy('created_at', 'asc');
     }
 }

@@ -23,4 +23,17 @@ class CommentController extends Controller
           return redirect()->route('posts.show', $body['pid']);
        }
     }
+
+    public function update(Request $request, Comment $comment) {
+        $body = $request->validate([
+            'body' => 'required|string',
+            'pid' => 'required|integer|exists:posts,id',
+        ]);
+        if ($body) {
+            $comment->body = $body['body'];
+            $comment->pid = $body['pid'];
+            $comment->save();
+            return redirect()->route('posts.show', $body['pid']);
+        }
+    }
 }

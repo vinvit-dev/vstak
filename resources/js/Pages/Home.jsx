@@ -18,11 +18,6 @@ export default function Home({ posts, users, auth}) {
                                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-md mb-4">
                                     <div className="flex justify-between">
                                         <Link href={route('posts.show', post)} className="text-xl font-bold">{post.title}</Link>
-                                        {
-                                            post.uid === auth.user.id
-                                                ? <PrimaryButton><Link href={route("posts.edit", post)}>Edit</Link></PrimaryButton>
-                                                : null
-                                        }
                                     </div>
                                     <p className="text-gray-500 dark:text-gray-600">{post.author.name}</p>
                                     <div>{parse(post.body.slice(0, 256))}</div>

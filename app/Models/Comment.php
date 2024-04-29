@@ -5,26 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Comment extends Model
 {
     use HasFactory;
 
-    /**
-     * {@inheritDoc}
-     */
     protected $fillable = [
-        'title',
         'body',
         'uid',
+        'pid',
     ];
 
     public function author()
     {
         return $this->belongsTo(User::class, 'uid');
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class, 'pid');
     }
 }

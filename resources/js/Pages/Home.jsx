@@ -40,7 +40,7 @@ export default function Home({ posts, users, auth}) {
                             return (
                                 <div key={user.id} className="flex items-center gap-x-3 w-full">
                                     <div className="p-3 border border-gray-200 dark:border-gray-700 rounded-md mb-4 w-full">
-                                        <Link className="font-bold">{user.name}</Link>
+                                        <Link className="font-bold">{user.name} - Points: {user.points}</Link>
                                         <p className="text-gray-500 dark:text-gray-600">{user.email}</p>
                                     </div>
                                 </div>

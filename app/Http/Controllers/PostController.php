@@ -104,6 +104,9 @@ class PostController extends Controller
             $solution->pid = $post->id;
             $solution->uid = $comment->uid;
             $solution->save();
+            $comment_author = $comment->author;
+            $comment_author->points += 10;
+            $comment_author->save();
             return redirect()->route('posts.show', $post->id);
         }
     }

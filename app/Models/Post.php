@@ -27,4 +27,8 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class, 'pid')->orderBy('created_at', 'asc');
     }
+
+    public function solution() {
+        return $this->hasOne(Solution::class, 'pid');
+    }
 }

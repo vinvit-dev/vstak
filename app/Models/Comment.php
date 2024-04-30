@@ -24,4 +24,8 @@ class Comment extends Model
     {
         return $this->belongsTo(Post::class, 'pid');
     }
+
+    public function solutions() {
+        return $this->hasMany(Solution::class, 'cid');
+    }
 }

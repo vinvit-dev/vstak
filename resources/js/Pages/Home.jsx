@@ -3,7 +3,7 @@ import DefaultLayout from "@/Layouts/DefaultLayout.jsx";
 import parse from "html-react-parser";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
 
-export default function Home({ posts, users, auth}) {
+export default function Home({ posts, users, post_count, solved_post_count, auth}) {
 
     return (
         <>
@@ -39,13 +39,17 @@ export default function Home({ posts, users, auth}) {
                         {users.map(user => {
                             return (
                                 <div key={user.id} className="flex items-center gap-x-3 w-full">
-                                    <div className="p-3 border border-gray-200 dark:border-gray-700 rounded-md mb-4 w-full">
+                                    <div
+                                        className="p-3 border border-gray-200 dark:border-gray-700 rounded-md mb-4 w-full">
                                         <Link className="font-bold">{user.name} - Points: {user.points}</Link>
                                         <p className="text-gray-500 dark:text-gray-600">{user.email}</p>
                                     </div>
                                 </div>
                             );
                         })}
+                        <div className="font-bold text-xl">Total posts: {post_count}</div>
+                        <div className="font-bold text-xl">Solved posts: {solved_post_count}</div>
+                        <div className="font-bold text-xl">Percent solved posts: {parseFloat(solved_post_count * 100 / post_count).toFixed(2)}%</div>
                     </div>
                 </div>
             </DefaultLayout>

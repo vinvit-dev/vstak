@@ -10,7 +10,7 @@ use Inertia\Inertia;
 
 class HomeController extends Controller {
    public function index() {
-       $posts = Post::with('author')->orderBy('created_at', 'DESC')->paginate(5);
+       $posts = Post::with(['author', 'tags'])->withExists('solution')->orderBy('created_at', 'DESC')->paginate(5);
        $users = User::query()->orderBy('points', 'DESC')->limit(10)->get();
 
        $post_count = Post::query()->count();

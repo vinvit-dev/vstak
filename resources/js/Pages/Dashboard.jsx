@@ -32,6 +32,17 @@ export default function Dashboard({ posts, recent_comments, auth }) {
                                 }
                             </div>
                             <div>{parse(post.body.slice(0, 256))}</div>
+                            <div className="flex items-center gap-2">
+                                <div>Tags:</div>
+                                {
+                                    post.tags.map(tag => {
+                                        return (
+                                            <div
+                                                className="border border-gray-400 p-1 w-min rounded-md">{tag.name}</div>
+                                        );
+                                    })
+                                }
+                            </div>
                         </div>
                     );
                 })}
@@ -42,7 +53,7 @@ export default function Dashboard({ posts, recent_comments, auth }) {
                                 return (
                                     <Link key={index} href={link.url}
                                           className="p-2 border border-gray-200 dark:border-gray-700 rounded-md mx-1">
-                                        {decodeURI(link.label)}
+                                    {decodeURI(link.label)}
                                     </Link>
                                 );
                             })}

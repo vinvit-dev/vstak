@@ -6,12 +6,21 @@ import InputError from "@/Components/InputError.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import axios from "axios";
+import AsyncCreatableSelect from "react-select/async-creatable";
 
 export default function Edit({post, auth}) {
+    console.log(post);
 
     const { data, setData, put, delete: destroy, processing, errors, reset} = useForm({
         title: post.title,
         body: post.body,
+        tags: post.tags.map((tag) => {
+            return {
+                value: tag.id,
+                label: tag.name
+            }
+        }),
     });
 
     const deletePost = (e) => {
@@ -26,12 +35,37 @@ export default function Edit({post, auth}) {
         put(route('posts.update', post));
     };
 
+    const searchTags = (inputValue) => {
+        return axios.post(route('tags.search'), {
+            query: inputValue
+        }).then((response) => {
+            return response.data.map((tag) => {
+                return {
+                    value: tag.id,
+                    label: tag.name + ' (' + tag.entries_count + ')',
+                }
+            });
+        });
+    }
+
+    const createTag = (inputValue) => {
+        axios.post(route('tags.store'), {
+            name: inputValue
+        }).then((response) => {
+            const tag = {
+                value: response.data.id,
+                label: response.data.name
+            }
+            setData('tags', [...data.tags, tag]);
+        });
+    }
+
     return (
         <>
-            <Head title="Create post"/>
+            <Head title="Edit post"/>
             <DefaultLayout user={auth.user}>
                 <div className="">
-                    <h2 className="text-4xl text-center font-bold pb-2">Create post</h2>
+                    <h2 className="text-4xl text-center font-bold pb-2">Edit post</h2>
                     <form onSubmit={submit}>
                         <div>
                             <InputLabel htmlFor="title" value="Title"/>
@@ -46,6 +80,21 @@ export default function Edit({post, auth}) {
                                 onChange={(e) => setData('title', e.target.value)}
                             />
 
+                            <InputError message={errors.title} className="mt-2"/>
+                        </div>
+
+                        <div>
+                            <InputLabel htmlFor="tags" value="Tags"/>
+
+                            <AsyncCreatableSelect
+                                isMulti
+                                isClearable
+                                cacheOptions
+                                onCreateOption={createTag}
+                                loadOptions={searchTags}
+                                onChange={(tags) => setData('tags', tags)}
+                                value={data.tags}
+                            />
                             <InputError message={errors.title} className="mt-2"/>
                         </div>
 

@@ -34,6 +34,7 @@ class PostController extends Controller
         $data = $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
+            'tags' => 'required|array',
         ]);
         if ($data) {
             $post = new Post();
@@ -41,8 +42,16 @@ class PostController extends Controller
             $post->body = $data['body'];
             $post->uid = auth()->id();
             $post->save();
+            $tids = array_map(function ($item) {
+                return $item['value'];
+            }, $data['tags']);
+            $post->tags()->sync($tids);
+            $post->save();
             return redirect()->route('dashboard');
+        } else {
+            return redirect()->back()->withErrors($data);
         }
+
     }
 
     /**
@@ -50,7 +59,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post = Post::with(['author', 'comments.author', 'solution'])->withExists(['solution'])->find($post->id);
+        $post = Post::with(['author', 'comments.author', 'solution', 'tags'])->withExists(['solution'])->find($post->id);
         return Inertia::render('Post/Show', [
             'post' => $post,
         ]);
@@ -61,6 +70,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        $post = $post->load(['tags']);
         return Inertia::render('Post/Edit', [
             'post' => $post,
         ]);
@@ -74,12 +84,19 @@ class PostController extends Controller
         $data = $request->validate([
             'title' => 'required|string',
             'body' => 'required|string',
+            'tags' => 'required|array',
         ]);
         if ($data) {
             $post->title = $data['title'];
             $post->body = $data['body'];
+            $tids = array_map(function ($item) {
+                return $item['value'];
+            }, $data['tags']);
+            $post->tags()->sync($tids);
             $post->save();
             return redirect()->route('dashboard');
+        } else {
+            return redirect()->back()->withErrors($data);
         }
     }
 
@@ -104,10 +121,7 @@ class PostController extends Controller
             $solution->pid = $post->id;
             $solution->uid = $comment->uid;
             $solution->save();
-            $comment_author = $comment->author;
-            $comment_author->points += 10;
-            $comment_author->save();
-            return redirect()->route('posts.show', $post->id);
+            return redirect()->back();
         }
     }
 }

@@ -11,7 +11,7 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller {
    public function index() {
-       $posts = Post::query()->where('uid', auth()->id())->paginate(5);
+       $posts = Post::query()->where('uid', auth()->id())->with('tags')->paginate(5);
        $recent_comments = Comment::with('post')
            ->orderBy('created_at', 'desc')
            ->limit(5)

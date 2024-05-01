@@ -29,18 +29,30 @@ export default function Show({ post, auth }) {
             <DefaultLayout user={user}>
                 <div className="flex items-center flex-col">
                     <div className="p-4 mb-4 w-3/4">
-                        {post.solution_exists ? <h2 className="text-green-500 text-3xl font-bold text-center">[SOLVED]</h2> : null}
+                        {post.solution_exists ?
+                            <h2 className="text-green-500 text-3xl font-bold text-center">[SOLVED]</h2> : null}
                         <h2 className="text-4xl text-center font-bold pb-2">
                             {post.title}
                         </h2>
                         <p className="text-gray-500 dark:text-gray-600 pb-4 text-center">{post.author.name}</p>
                         <p className="w-3/4 mx-auto">{parse(post.body)}</p>
+                        <div className="flex items-center gap-2">
+                            <div>Tags:</div>
+                            {
+                                post.tags.map(tag => {
+                                    return (
+                                        <div className="border border-gray-400 p-1 w-min rounded-md">{tag.name}</div>
+                                    );
+                                })
+                            }
+                        </div>
                     </div>
                     <div className="p-4 mb-4 w-3/4">
                         <h2 className="text-4xl mb-7 text-center font-bold pb-2">Comments</h2>
                         {post.comments.map(comment => {
                             if (editData.comment && editData.comment.id === comment.id) {
-                               return <CommentForm key={comment.id} toPost={post} comment={comment} isUpdate={true} onUpdate={() => setData('comment', null)}/>
+                                return <CommentForm key={comment.id} toPost={post} comment={comment} isUpdate={true}
+                                                    onUpdate={() => setData('comment', null)}/>
                             } else {
                                 return (
                                     <div key={comment.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-md mb-4">

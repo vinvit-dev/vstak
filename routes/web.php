@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TagsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -15,6 +16,9 @@ Route::post('/posts/{post}/solve', [PostController::class, 'solve'])->name('post
 Route::resource('posts', PostController::class);
 
 Route::resource('comments', CommentController::class);
+
+Route::post('/tags/search', [TagsController::class, 'search'])->name('tags.search');
+Route::post('/tags', [TagsController::class, 'store'])->name('tags.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -16,18 +16,33 @@ export default function Home({ posts, users, post_count, solved_post_count, auth
                             return (
                                 <div key={post.id}
                                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-md mb-4">
-                                    <div className="flex justify-between">
-                                        <Link href={route('posts.show', post)} className="text-xl font-bold">{post.title}</Link>
+                                    <div className="flex items-center gap-2">
+                                        {post.solution_exists ?
+                                            <span className="text-green-500 font-bold">[SOLVED]</span> : null}
+                                        <Link href={route('posts.show', post)}
+                                              className="text-xl font-bold">{post.title}</Link>
                                     </div>
                                     <p className="text-gray-500 dark:text-gray-600">{post.author.name}</p>
                                     <div>{parse(post.body.slice(0, 256))}</div>
+                                    <div className="flex items-center gap-2">
+                                        <div>Tags:</div>
+                                        {
+                                            post.tags.map(tag => {
+                                                return (
+                                                    <div
+                                                        className="border border-gray-400 p-1 w-min rounded-md">{tag.name}</div>
+                                                );
+                                            })
+                                        }
+                                    </div>
                                 </div>
                             );
                         })}
                         <div className="flex justify-center">
                             {posts.links.map((link, index) => {
                                 return (
-                                    <Link key={index} href={link.url} className="p-2 border border-gray-200 dark:border-gray-700 rounded-md mx-1">
+                                    <Link key={index} href={link.url}
+                                          className="p-2 border border-gray-200 dark:border-gray-700 rounded-md mx-1">
                                         {parse(link.label)}
                                     </Link>
                                 );

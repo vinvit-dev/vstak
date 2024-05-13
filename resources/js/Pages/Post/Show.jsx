@@ -1,13 +1,20 @@
 import {Link, Head, useForm} from '@inertiajs/react';
 import DefaultLayout from "@/Layouts/DefaultLayout.jsx";
+import TimeAgo from "javascript-time-ago";
+import en from 'javascript-time-ago/locale/en'
 import parse from "html-react-parser";
-import CommentForm from "@/Pages/Post/Partials/CommentForm.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
+import {TagItem} from "@/Components/ListItems/TagItem.jsx";
+import {CommentListItem} from "@/Components/ListItems/CommentListItem.jsx";
+import CommentForm from "@/Pages/Post/Partials/CommentForm.jsx";
+
+TimeAgo.addDefaultLocale(en)
 
 export default function Show({ post, auth }) {
     console.log(post);
     const user = auth.user ?? null;
-    let editComment = !!user;
+    const timeAgo = new TimeAgo('en-US')
+    const canEdit = user && user.id === post.uid;
     const {data: editData, setData} = useForm({
         comment: null
     });
@@ -27,69 +34,75 @@ export default function Show({ post, auth }) {
         <>
             <Head title={post.title}/>
             <DefaultLayout user={user}>
-                <div className="flex items-center flex-col">
-                    <div className="p-4 mb-4 w-3/4">
-                        {post.solution_exists ?
-                            <h2 className="text-green-500 text-3xl font-bold text-center">[SOLVED]</h2> : null}
-                        <h2 className="text-4xl text-center font-bold pb-2">
-                            {post.title}
-                        </h2>
-                        <p className="text-gray-500 dark:text-gray-600 pb-4 text-center">{post.author.name}</p>
-                        <p className="w-3/4 mx-auto">{parse(post.body)}</p>
-                        <div className="flex items-center gap-2">
-                            <div>Tags:</div>
-                            {
-                                post.tags.map(tag => {
-                                    return (
-                                        <div className="border border-gray-400 p-1 w-min rounded-md">{tag.name}</div>
-                                    );
-                                })
-                            }
-                        </div>
-                    </div>
-                    <div className="p-4 mb-4 w-3/4">
-                        <h2 className="text-4xl mb-7 text-center font-bold pb-2">Comments</h2>
-                        {post.comments.map(comment => {
-                            if (editData.comment && editData.comment.id === comment.id) {
-                                return <CommentForm key={comment.id} toPost={post} comment={comment} isUpdate={true}
-                                                    onUpdate={() => setData('comment', null)}/>
-                            } else {
-                                return (
-                                    <div key={comment.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-md mb-4">
-                                        <div className="flex justify-between">
-                                            <div className="flex items-center gap-2">
-                                                {post.solution_exists && post.solution.cid === comment.id ? <span className="text-green-500 font-bold">[SOLUTION]</span> : null}
-                                                <div className="text-xl font-bold">{comment.author.name}</div>
-                                            </div>
-                                            <div>
-                                                {
-                                                    editComment && user.id === comment.uid ?
-                                                        <PrimaryButton onClick={(e) => setData('comment', comment)}>Edit</PrimaryButton>
-                                                        : null
-                                                }
-                                                {
-                                                    user && user.id === post.uid && !post.solution_exists ?
-                                                        <PrimaryButton onClick={() =>  markAsSolved({comment})} className="ml-2">Mark as Solution</PrimaryButton>
-                                                        : null
-                                                }
-                                            </div>
-                                        </div>
-                                        <div className="text-gray-500 dark:text-gray-600">{parse(comment.body)}</div>
+                <DefaultLayout.SidebarLayout>
+                    <DefaultLayout.Main>
+                        <div>
+                            <div className={"flex flex-col gap-1 pb-4 border-b border-gray-400"}>
+                                <div className={"flex justify-between"}>
+                                    <h1 className={"text-3xl font-medium truncate"}>{post.title}</h1>
+                                    <div className={"flex gap-3"}>
+                                        {canEdit ? <PrimaryButton><Link href={route('posts.edit', post)}>Edit</Link></PrimaryButton> : null}
+                                        {user ? <PrimaryButton><Link href={route('posts.create')}>Create own
+                                            post</Link></PrimaryButton> : null}
                                     </div>
-                                );
-                            }
-                        })}
-                        {
-                            !user ?
-                                <div className="text-center">Login to leave comment</div>
-                            :
-                                <div>
-                                    <h2 className="text-3xl font-bold text-center mt-6 mb-3">Add comment</h2>
-                                    <CommentForm toPost={post}/>
                                 </div>
-                        }
-                    </div>
-                </div>
+                                <div className={"flex gap-5 text-sm items-center"}>
+                                    {post.solution_exists ? <div
+                                        className={"text-green-700 dark:text-green-300 text-base"}>[Solved]</div> : null}
+                                    <div>Asked: {timeAgo.format(Date.parse(post.created_at))}</div>
+                                    <div>Modified: {timeAgo.format(Date.parse(post.updated_at))}</div>
+                                </div>
+                            </div>
+                            <div className={"flex gap-1 py-4 border-b border-gray-400"}>
+                                <div className={"pl-4 pr-[100px]"}>{parse(post.body)}</div>
+                            </div>
+                            <div className={"flex justify-between items-center w-full p-3"}>
+                                <div className={"flex gap-1"}>
+                                    {
+                                        post.tags ? post.tags.map((tag) => (
+                                            <TagItem key={tag.id} tag={tag}/>
+                                        )) : null
+                                    }
+                                </div>
+                                <div>
+                                    Author: {post.author.name}
+                                </div>
+                            </div>
+                            <div>
+                               <div className={"text-2xl font-medium py-5"}>{post.comments.length} Answers: </div>
+                                <div className={"flex flex-col gap-2"}>
+                                    {
+                                        post.comments.map((comment) => {
+                                            if (editData.comment && editData.comment.id === comment.id) {
+                                                return (
+                                                    <>
+                                                        <CommentForm key={comment.id} toPost={post} comment={comment} isUpdate={true}
+                                                                     onUpdate={() => setData('comment', null)}/>
+                                                    </>
+                                                )
+                                            } else {
+                                                return (
+                                                    <CommentListItem key={comment.id} comment={comment} user={user} isSolution={post.solution_exists && post.solution.cid === comment.id}
+                                                                     openEdit={(comment) => setData('comment', comment)}/>
+                                                )
+                                            }
+                                        })
+                                    }
+                                </div>
+                                {
+                                    user ?
+                                        <>
+                                            <div className={"text-xl font-medium py-5"}>Your answer: </div>
+                                            <CommentForm toPost={post}/>
+                                        </>
+                                        : <div className={"p-4 text-center"}><Link className={"underline"} href={route('login')}>Login</Link> to leave comment.</div>
+                                }
+                            </div>
+                        </div>
+                    </DefaultLayout.Main>
+                    <DefaultLayout.Sidebar>
+                    </DefaultLayout.Sidebar>
+                </DefaultLayout.SidebarLayout>
             </DefaultLayout>
         </>
     );

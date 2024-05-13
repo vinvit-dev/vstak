@@ -59,7 +59,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post = Post::with(['author', 'comments.author', 'solution', 'tags'])->withExists(['solution'])->find($post->id);
+        $post = Post::with(['author', 'comments.author', 'solution', 'tags', 'solution'])->withExists(['solution'])->find($post->id);
         return Inertia::render('Post/Show', [
             'post' => $post,
         ]);
@@ -122,6 +122,28 @@ class PostController extends Controller
             $solution->uid = $comment->uid;
             $solution->save();
             return redirect()->back();
+        }
+    }
+
+    public function search(Request $request) {
+        $data = $request->validate([
+            'q' => 'string',
+            'tags' => 'array',
+        ]);
+        if ($data) {
+            $query = Post::query();
+            if (isset($data['q'])) {
+               $query->where('title', 'like', '%'.$data['q'].'%');
+            }
+            if (isset($data['tags'])) {
+                $query->whereHas('tags', function ($query) use ($data) {
+                    $query->whereIn('name', $data['tags']);
+                });
+            }
+            $result = $query->limit(5)->get();
+            return response()->json($result);
+        } else {
+            return response()->json([]);
         }
     }
 }

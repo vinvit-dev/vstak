@@ -2,6 +2,7 @@ import {Head, Link} from '@inertiajs/react';
 import DefaultLayout from "@/Layouts/DefaultLayout.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import parse from 'html-react-parser';
+import {PostListItem} from "@/Components/ListItems/PostListItem.jsx";
 
 export default function Dashboard({ posts, recent_comments, auth }) {
     return (
@@ -12,7 +13,7 @@ export default function Dashboard({ posts, recent_comments, auth }) {
             <Head title="Dashboard"/>
 
             <div>
-                <div className="flex justify-between p-10">
+                <div className="flex justify-between px-10">
                     <h2 className="text-3xl font-bold">Your posts</h2>
                     <PrimaryButton>
                         <Link href={route('posts.create')}>Create post</Link>
@@ -20,30 +21,7 @@ export default function Dashboard({ posts, recent_comments, auth }) {
                 </div>
                 {posts.data.map(post => {
                     return (
-                        <div key={post.id}
-                             className="p-4 border border-gray-200 dark:border-gray-700 rounded-md mb-4">
-                            <div className="flex justify-between">
-                                <Link href={route('posts.show', post)} className="text-xl font-bold">{post.title}</Link>
-                                {
-                                    post.uid === auth.user.id
-                                        ? <PrimaryButton><Link
-                                            href={route("posts.edit", post)}>Edit</Link></PrimaryButton>
-                                        : null
-                                }
-                            </div>
-                            <div>{parse(post.body.slice(0, 256))}</div>
-                            <div className="flex items-center gap-2">
-                                <div>Tags:</div>
-                                {
-                                    post.tags.map(tag => {
-                                        return (
-                                            <div
-                                                className="border border-gray-400 p-1 w-min rounded-md">{tag.name}</div>
-                                        );
-                                    })
-                                }
-                            </div>
-                        </div>
+                        <PostListItem post={post} key={post.id}/>
                     );
                 })}
                 {

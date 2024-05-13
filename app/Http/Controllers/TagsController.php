@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TagsController extends Controller
 {
@@ -27,5 +29,18 @@ class TagsController extends Controller
             $tag->save();
             return response()->json($tag);
         }
+    }
+
+    public function show(Tag $tag) {
+        $posts =Post::query()->whereHas('tags', function ($query) use ($tag) {
+            $query->where('tid', $tag->id);
+        })->with(['tags', 'author'])->withExists('solution')->paginate(7);
+
+        return Inertia::render('Tags/TagSearch',
+            [
+                'posts' => $posts,
+                'tag' => $tag,
+            ]
+        );
     }
 }

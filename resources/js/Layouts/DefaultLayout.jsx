@@ -3,19 +3,22 @@ import { Link } from '@inertiajs/react';
 import Container from "@/Components/Container.jsx";
 import GuestMenu from "@/Menus/GuestMenu.jsx";
 import UserMenu from "@/Menus/UserMenu.jsx";
+import {globalBackgroundStyle, mainBackgroundStyle, mainTextColor} from "@/variables.js";
+import {SearchInput} from "@/Layouts/SearchInput.jsx";
 
-export default function DefaultLayout({ user = null, children }) {
+const DefaultLayout = ({ user = null, children }) => {
     return (
         <div className="h-screen flex flex-col">
-            <header className="bg-red-300 p-2">
+            <header className={"p-2 " + globalBackgroundStyle}>
                 <Container>
                     <div className="grid grid-cols-2 gap-2 items-center">
                         <div>
                             <Link href="/">
-                                <ApplicationLogo className="w-12 h-12 fill-white text-gray-500"/>
+                                <ApplicationLogo />
                             </Link>
                         </div>
-                        <div className="flex justify-end text-black">
+                        <div className="flex justify-end">
+                            <SearchInput className={"min-w-[400px] mr-10"}/>
                             {user ?
                                 <UserMenu user={user}/>
                                 :
@@ -25,12 +28,12 @@ export default function DefaultLayout({ user = null, children }) {
                     </div>
                 </Container>
             </header>
-            <main className="flex-grow bg-gray-50 pt-4 pb-4">
-                <Container>
+            <main className={"flex-grow pt-0 pb-0 " + mainBackgroundStyle + " " + mainTextColor}>
+                <Container className={"pt-10 pb-10"}>
                     {children}
                 </Container>
             </main>
-            <footer className="bg-red-300 p-3 text-center">
+            <footer className={"p-3 text-center " + globalBackgroundStyle + " " + mainTextColor}>
                 <Container>
                     <p>&copy; 2024</p>
                 </Container>
@@ -38,3 +41,42 @@ export default function DefaultLayout({ user = null, children }) {
         </div>
     );
 }
+
+const SidebarLayout = ({children}) => {
+    return (
+        <div className="flex justify-between lg:flex-row flex-col">
+            {children}
+        </div>
+    )
+}
+
+const Main = ({children}) => {
+    return (
+        <div className="lg:w-[75%] sm:w-full">
+            {children}
+        </div>
+    )
+}
+
+const Sidebar = ({children}) => {
+    return (
+        <div className="lg:w-[20%] w-full mx-auto">
+            {children}
+        </div>
+    )
+}
+
+const CenteredBlock = ({children, className = ''}) => {
+    return (
+        <div className={"max-w-[600px] mx-auto " + className}>
+            {children}
+        </div>
+    )
+}
+
+DefaultLayout.SidebarLayout = SidebarLayout;
+DefaultLayout.Main = Main;
+DefaultLayout.Sidebar = Sidebar;
+DefaultLayout.CenteredBlock = CenteredBlock;
+
+export default DefaultLayout;

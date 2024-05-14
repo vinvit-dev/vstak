@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+pre {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid gray;
+    background-color: #e6e6e6;
+}
+
+blockquote {
+    border-left: 5px solid royalblue;
+    padding: 10px 20px;
+}
+
+h2 {
+    @apply text-2xl font-bold;
+}
+
+h3 {
+    @apply text-xl font-bold;
+}
+
+h4 {
+    @apply text-lg font-bold;
+}
+
+p a {
+    @apply text-blue-600 underline;
+    @apply hover:text-blue-800 hover:cursor-pointer;
+}
+
+ul {
+    @apply list-disc pl-4 py-2;
+}
+
+ol {
+    @apply list-decimal pl-4 py-2;
+}
+
+.ck.ck-content {
+    @apply text-gray-800;
+}

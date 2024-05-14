@@ -4,12 +4,9 @@ import InputLabel from "@/Components/InputLabel.jsx";
 import TextInput from "@/Components/TextInput.jsx";
 import InputError from "@/Components/InputError.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
-import {CKEditor} from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import AsyncSelect from "react-select/async";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import axios from "axios";
-import {useEffect} from "react";
+import {VStackCkeditor} from "@/Components/VStackCkeditor.jsx";
 
 export default function Create({auth}) {
 
@@ -28,7 +25,6 @@ export default function Create({auth}) {
         return axios.post(route('tags.search'), {
             query: inputValue
         }).then((response) => {
-            console.log(response.data);
             return response.data.map((tag) => {
                 return {
                     value: tag.id,
@@ -90,16 +86,12 @@ export default function Create({auth}) {
 
                         <div className="mt-4">
                             <InputLabel htmlFor="body" value="Body"/>
-                            <CKEditor
-                                id="body"
-                                name="body"
-                                editor={ClassicEditor}
-                                data={data.body}
-                                onChange={(event, editor) => {
-                                    setData('body', editor.getData());
-                                }}
+                            <VStackCkeditor
+                                onChange={({editor}) => setData('body', editor.getData())}
+                                value={data.body}
+                                error={errors.body}
+                                auth={auth}
                             />
-                            <InputError message={errors.body} className="mt-2"/>
                         </div>
 
                         <div className="flex items-center justify-end mt-4">

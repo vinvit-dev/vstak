@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -21,6 +22,8 @@ Route::resource('comments', CommentController::class);
 Route::post('/tags/search', [TagsController::class, 'search'])->name('tags.search');
 Route::post('/tags', [TagsController::class, 'store'])->name('tags.store');
 Route::get('/tags/{tag}', [TagsController::class, 'show'])->name('tags.show');
+
+Route::post('/file/upload', [FileController::class, 'upload'])->name('file.upload');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

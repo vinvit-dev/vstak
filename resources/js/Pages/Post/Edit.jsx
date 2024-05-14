@@ -4,14 +4,11 @@ import InputLabel from "@/Components/InputLabel.jsx";
 import TextInput from "@/Components/TextInput.jsx";
 import InputError from "@/Components/InputError.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
-import {CKEditor} from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import axios from "axios";
 import AsyncCreatableSelect from "react-select/async-creatable";
+import {VStackCkeditor} from "@/Components/VStackCkeditor.jsx";
 
 export default function Edit({post, auth}) {
-    console.log(post);
-
     const { data, setData, put, delete: destroy, processing, errors, reset} = useForm({
         title: post.title,
         body: post.body,
@@ -99,14 +96,12 @@ export default function Edit({post, auth}) {
                         </div>
 
                         <div className="mt-4">
-                            <CKEditor
-                                editor={ClassicEditor}
-                                data={data.body}
-                                onChange={(event, editor) => {
-                                    setData('body', editor.getData());
-                                }}
+                            <VStackCkeditor
+                                onChange={({editor}) => setData('body', editor.getData())}
+                                value={data.body}
+                                error={errors.body}
+                                auth={auth}
                             />
-                            <InputError message={errors.body} className="mt-2"/>
                         </div>
 
                         <div className="flex items-center justify-end mt-4">

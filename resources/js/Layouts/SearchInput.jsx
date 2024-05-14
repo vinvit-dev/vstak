@@ -9,7 +9,6 @@ export const SearchInput = ({className = ''}) => {
         return axios.post(route('posts.search'), {
             q: inputValue
         }).then((response) => {
-            console.log(response.data);
             return response.data.map((post) => {
                 return {
                     value: post.id,
@@ -18,7 +17,6 @@ export const SearchInput = ({className = ''}) => {
             });
         });
     }
-    console.log(router)
     return (
        <div className={className}>
            <AsyncSelect

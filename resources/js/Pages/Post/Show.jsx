@@ -11,7 +11,6 @@ import CommentForm from "@/Pages/Post/Partials/CommentForm.jsx";
 TimeAgo.addDefaultLocale(en)
 
 export default function Show({ post, auth }) {
-    console.log(post);
     const user = auth.user ?? null;
     const timeAgo = new TimeAgo('en-US')
     const canEdit = user && user.id === post.uid;
@@ -76,7 +75,7 @@ export default function Show({ post, auth }) {
                                             if (editData.comment && editData.comment.id === comment.id) {
                                                 return (
                                                     <>
-                                                        <CommentForm key={comment.id} toPost={post} comment={comment} isUpdate={true}
+                                                        <CommentForm key={comment.id} toPost={post} comment={comment} isUpdate={true} auth={auth}
                                                                      onUpdate={() => setData('comment', null)}/>
                                                     </>
                                                 )
@@ -93,7 +92,7 @@ export default function Show({ post, auth }) {
                                     user ?
                                         <>
                                             <div className={"text-xl font-medium py-5"}>Your answer: </div>
-                                            <CommentForm toPost={post}/>
+                                            <CommentForm toPost={post} auth={auth}/>
                                         </>
                                         : <div className={"p-4 text-center"}><Link className={"underline"} href={route('login')}>Login</Link> to leave comment.</div>
                                 }

@@ -4,7 +4,6 @@ import {PostListItem} from "@/Components/ListItems/PostListItem.jsx";
 import {Pager} from "@/Components/Pager.jsx";
 
 export default function TagSearch({ posts, tag, auth }) {
-    console.log(posts)
     return (
         <>
     <DefaultLayout user={auth.user}>

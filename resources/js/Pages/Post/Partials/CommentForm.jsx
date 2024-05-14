@@ -1,13 +1,9 @@
 import {useForm} from "@inertiajs/react";
-import {CKEditor} from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import InputError from "@/Components/InputError.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import {VStackCkeditor} from "@/Components/VStackCkeditor.jsx";
 
-export default function CommentForm({toPost, comment = null, isUpdate = false, onUpdate, ...props}) {
-    console.log(comment)
-    const {data, setData, post, put, processing, errors} = useForm({
+export default function CommentForm({toPost, comment = null, isUpdate = false, onUpdate, auth, ...props}) {
+    const {data, setData, setError, post, put, processing, errors} = useForm({
         body: comment ? comment.body : '',
         pid: toPost.id,
     });
@@ -19,6 +15,9 @@ export default function CommentForm({toPost, comment = null, isUpdate = false, o
                 preserveScroll: true,
                 onSuccess: () => {
                     onUpdate();
+                },
+                onError: (response) => {
+                    setError('body', response.body);
                 }
             });
         } else {
@@ -27,6 +26,9 @@ export default function CommentForm({toPost, comment = null, isUpdate = false, o
                 preserveScroll: true,
                 onSuccess: () => {
                     setData('body', '');
+                },
+                onError: (response) => {
+                    setError('body', response.body);
                 }
             });
         }
@@ -38,9 +40,9 @@ export default function CommentForm({toPost, comment = null, isUpdate = false, o
                <VStackCkeditor
                    value={data.body}
                    onChange={({editor}) => setData('body', editor.getData())}
-                   errors={errors.body}
+                   error={errors.body}
+                   auth={auth}
                />
-               <InputError message={errors.body} className="mt-2"/>
                <div className="flex justify-end mb-6">
                    <PrimaryButton className="mt-2" disabled={processing}>
                        {isUpdate

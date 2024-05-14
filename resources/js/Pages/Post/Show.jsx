@@ -46,7 +46,7 @@ export default function Show({ post, auth }) {
                                     </div>
                                 </div>
                                 <div className={"flex gap-5 text-sm items-center"}>
-                                    {post.solution_exists ? <div
+                                    {solvedData.cid ? <div
                                         className={"text-green-700 dark:text-green-300 text-base"}>[Solved]</div> : null}
                                     <div>Asked: {timeAgo.format(Date.parse(post.created_at))}</div>
                                     <div>Modified: {timeAgo.format(Date.parse(post.updated_at))}</div>
@@ -81,8 +81,8 @@ export default function Show({ post, auth }) {
                                                 )
                                             } else {
                                                 return (
-                                                    <CommentListItem key={comment.id} comment={comment} user={user} isSolution={post.solution_exists && post.solution.cid === comment.id}
-                                                                     openEdit={(comment) => setData('comment', comment)}/>
+                                                    <CommentListItem key={comment.id} comment={comment} user={user} isSolution={solvedData.cid === comment.id}
+                                                                     openEdit={(comment) => setData('comment', comment)} markAsSolution={user.id === post.uid && !solvedData.cid ? (comment) => markAsSolved({comment}): null}/>
                                                 )
                                             }
                                         })

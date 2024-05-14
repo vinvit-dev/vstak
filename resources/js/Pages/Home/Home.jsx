@@ -1,17 +1,27 @@
 import DefaultLayout from "@/Layouts/DefaultLayout.jsx";
-import {Head} from "@inertiajs/react";
+import {Head, Link} from "@inertiajs/react";
 import {PostListItem} from "@/Components/ListItems/PostListItem.jsx";
 import {Pager} from "@/Components/Pager.jsx";
+import {router} from "@inertiajs/core";
 
 export default function Home({ posts, users, post_count, solved_post_count, auth}) {
 
+    const getQueryParam = (name) => new URLSearchParams(window.location.search).get(name);
+    const filterLink = 'px-3 py-1 hover:bg-gray-700 rounded';
     return (
         <>
             <Head title="Home" />
             <DefaultLayout user={auth.user}>
                 <DefaultLayout.SidebarLayout>
                     <DefaultLayout.Main>
-                        <h2 className={"text-3xl font-bold pb-3"}>Posts: </h2>
+                        <div className={"flex justify-between"}>
+                            <h2 className={"text-3xl font-bold pb-3"}>Posts: </h2>
+                            <div className={"flex border rounded border-gray-400 h-fit"}>
+                                <Link href={route('home', {"filter": 'all'})} className={filterLink + (getQueryParam('filter') === 'all' || !getQueryParam('filter')  ? " bg-gray-600" : "")}>All</Link>
+                                <Link href={route('home', {"filter": 'solved'})} className={filterLink + (getQueryParam('filter') === 'solved' ? " bg-gray-600" : "")}>Solved</Link>
+                                <Link href={route('home', {"filter": 'unsolved'})} className={filterLink + (getQueryParam('filter') === 'unsolved' ? " bg-gray-600" : "")}>Unsolved</Link>
+                            </div>
+                        </div>
                         {
                             posts && posts.data.map((post) => (
                                 <div key={post.id} className={"pb-4"}>

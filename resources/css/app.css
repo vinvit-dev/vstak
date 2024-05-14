@@ -8,6 +8,7 @@ pre {
     border-radius: 5px;
     border: 1px solid gray;
     background-color: #e6e6e6;
+    @apply text-gray-800;
 }
 
 blockquote {
@@ -40,6 +41,6 @@ ol {
     @apply list-decimal pl-4 py-2;
 }
 
-.ck.ck-content {
+.ck.ck-content, input {
     @apply text-gray-800;
 }

@@ -9,8 +9,17 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class HomeController extends Controller {
-   public function index() {
-       $posts = Post::with(['author', 'tags'])->withExists('solution')->withCount('comments')->orderBy('created_at', 'DESC')->paginate(7);
+   public function index(Request $request) {
+       $query = Post::with(['author', 'tags'])->withExists('solution')->withCount('comments');
+       if ($filter = $request->input('filter')) {
+          if ($filter == 'solved') {
+              $query->whereHas('solution');
+          }
+          if ($filter == 'unsolved') {
+              $query->whereDoesntHave('solution');
+          }
+       }
+       $posts = $query->orderBy('created_at', 'desc')->paginate(10);
        $users = User::query()->orderBy('points', 'DESC')->limit(10)->get();
 
        $post_count = Post::query()->count();

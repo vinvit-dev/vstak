@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,5 +61,19 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function show(User $user)
+    {
+        $posts = Post::with(['author', 'tags'])->withExists('solution')
+            ->withCount('comments')
+            ->where('uid', '=', $user->id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        return Inertia::render("Profile/Show", [
+            'user' => $user,
+            'posts' => $posts,
+        ]);
     }
 }

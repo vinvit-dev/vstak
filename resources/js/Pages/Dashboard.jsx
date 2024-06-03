@@ -2,7 +2,7 @@ import {Head, Link} from '@inertiajs/react';
 import DefaultLayout from "@/Layouts/DefaultLayout.jsx";
 import PrimaryButton from "@/Components/PrimaryButton.jsx";
 import parse from 'html-react-parser';
-import {PostListItem} from "@/Components/ListItems/PostListItem.jsx";
+import PostListItem from "@/Components/ListItems/PostListItem.jsx";
 
 export default function Dashboard({ posts, recent_comments, auth }) {
     return (

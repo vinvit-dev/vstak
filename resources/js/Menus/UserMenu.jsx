@@ -1,6 +1,3 @@
-import NavLink from "@/Components/NavLink.jsx";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.jsx";
-import {Link} from "@inertiajs/react";
 import Dropdown from "@/Components/Dropdown.jsx";
 
 export default function UserMenu({user}) {
@@ -31,8 +28,8 @@ export default function UserMenu({user}) {
             </Dropdown.Trigger>
 
             <Dropdown.Content>
-                <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                <Dropdown.Link href={route('dashboard')}>Dashboard</Dropdown.Link>
+                <Dropdown.Link href={route('profile.edit')}>Settings</Dropdown.Link>
+                <Dropdown.Link href={route('profile.show', user)}>Profile</Dropdown.Link>
                 <Dropdown.Link href={route('logout')} method="post" as="button">
                     Log Out
                 </Dropdown.Link>

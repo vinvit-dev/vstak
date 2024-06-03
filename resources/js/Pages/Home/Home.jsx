@@ -1,6 +1,6 @@
 import DefaultLayout from "@/Layouts/DefaultLayout.jsx";
 import {Head, Link} from "@inertiajs/react";
-import {PostListItem} from "@/Components/ListItems/PostListItem.jsx";
+import PostListItem from "@/Components/ListItems/PostListItem.jsx";
 import {Pager} from "@/Components/Pager.jsx";
 import {router} from "@inertiajs/core";
 

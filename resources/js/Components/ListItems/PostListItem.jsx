@@ -3,7 +3,7 @@ import {TagItem} from "@/Components/ListItems/TagItem.jsx";
 import {Link} from "@inertiajs/react";
 import {preprocessBodyTeaser} from "@/utils.js";
 
-export const PostListItem = ({post, className})  => {
+export default function PostListItem ({post, className}) {
    return (
        <div className={"border-b border-gray-400 flex p-3 " + className}>
            <div className={"pr-5 text-sm flex flex-col justify-center items-end min-w-[120px]"}>
@@ -26,7 +26,7 @@ export const PostListItem = ({post, className})  => {
                        }
                    </div>
                    <div className={"truncate"}>
-                       {post.author ? post.author.name : null}
+                       {post.author ? <Link href={route('profile.show', post.author)}>{post.author.name}</Link> : null}
                    </div>
                </div>
            </div>

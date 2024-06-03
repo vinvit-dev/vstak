@@ -1,6 +1,6 @@
 import DefaultLayout from "@/Layouts/DefaultLayout.jsx";
 import {Head} from "@inertiajs/react";
-import {PostListItem} from "@/Components/ListItems/PostListItem.jsx";
+import PostListItem from "@/Components/ListItems/PostListItem.jsx";
 import {Pager} from "@/Components/Pager.jsx";
 
 export default function TagSearch({ posts, tag, auth }) {

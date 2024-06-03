@@ -82,7 +82,7 @@ export default function Show({ post, auth }) {
                                             } else {
                                                 return (
                                                     <CommentListItem key={comment.id} comment={comment} user={user} isSolution={solvedData.cid === comment.id}
-                                                                     openEdit={(comment) => setData('comment', comment)} markAsSolution={user.id === post.uid && !solvedData.cid ? (comment) => markAsSolved({comment}): null}/>
+                                                                     openEdit={(comment) => setData('comment', comment)} markAsSolution={user && user.id === post.uid && !solvedData.cid ? (comment) => markAsSolved({comment}): null}/>
                                                 )
                                             }
                                         })
